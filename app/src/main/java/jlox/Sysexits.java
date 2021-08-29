@@ -5,8 +5,8 @@ public class Sysexits {
     // It’s the closest thing to a standard I could find.
     /**
      * EX_USAGE (64) The command was used incorrectly, e.g., with the
-     * wrong number of arguments, a bad flag, a bad syntax
-     * in a parameter, or whatever.
+     *               wrong number of arguments, a bad flag, a bad syntax
+     *               in a parameter, or whatever.
      */
     public static final int EX_USAGE = 64;
     /**
@@ -17,9 +17,15 @@ public class Sysexits {
     public static final int EX_DATAERR = 65;
     /**
      * EX_NOINPUT (66) An input file (not a system file) did not exist or
-     * was not readable. This could also include errors
-     * like ``No message'' to a mailer (if it cared to
-     * catch it).
+     *                 was not readable. This could also include errors
+     *                 like ``No message'' to a mailer (if it cared to
+     *                 catch it).
      */
     public static final int EX_NOINPUT = 66;
+    /**
+     *  EX_SOFTWARE (70) An internal software error has been detected.  This
+     *                   should be limited to non-operating system related
+     *                   errors as possible.
+     */
+    public static final int EX_SOFTWARE = 70;
 }

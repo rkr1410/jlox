@@ -17,13 +17,22 @@ public class AstGen {
 //            System.exit(Sysexits.EX_USAGE);
 //        }
 //        String outputDir = args[0];
-        String outputDir = "/Users/pafau/IdeaProjects/jlox/app/src/main/java/jlox";
+        //String outputDir = "/Users/pafau/IdeaProjects/jlox/app/src/main/java/jlox";
+        String outputDir = "C:\\stuff\\java\\jlox\\app\\src\\main\\java\\jlox";
 
         defineAst(outputDir, "Expr", Arrays.asList(
+                "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
-                "Unary    : Token operator, Expr right"
+                "Unary    : Token operator, Expr right",
+                "Variable : Token name"
+        ));
+
+        defineAst(outputDir, "Stmt", Arrays.asList(
+            "Expression : Expr expression",
+            "Print      : Expr expression",
+            "Var        : Token name, Expr initializer"
         ));
     }
 

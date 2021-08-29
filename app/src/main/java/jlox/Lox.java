@@ -19,7 +19,9 @@ import java.nio.file.Paths;
 
  */
 public class Lox {
+    private static final Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
+    static boolean hadRuntimeError = false;
 
     public static void main(String[] args) throws IOException {
         var argCount = args.length;
@@ -39,19 +41,24 @@ public class Lox {
         String scriptContents = Files.readString(scriptPath, Charset.defaultCharset());
 
         run(scriptContents);
-        if (hadError) {
-            System.exit(Sysexits.EX_DATAERR);
-        }
+        if (hadError) System.exit(Sysexits.EX_DATAERR);
+        if (hadRuntimeError) System.exit(Sysexits.EX_SOFTWARE);
     }
 
     static void run(String loxSource) {
-        System.out.println("rcvd: " + loxSource);
+        System.out.println("source: " + loxSource);
         var scanner = new Scanner(loxSource);
         var tokens = scanner.scanTokens();
+        var parser = new Parser(tokens);
+        var program = parser.parse();
 
-        for (var token : tokens) {
-            System.out.println(token);
-        }
+        if (hadError) return;
+
+        interpreter.interpret(program);
+
+//        for (var token : tokens) {
+//            System.out.println(token);
+//        }
     }
 
     private static Path getScriptPath(String fileName) {
@@ -68,8 +75,21 @@ public class Lox {
         }
     }
 
+    static void error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, " at '" + token.lexeme + "'", message);
+        }
+    }
+
     static void error(int line, String message) {
         report(line, "", message);
+    }
+
+    static void runtimeError(RuntimeError e) {
+        System.err.println(e.getMessage() + "\n[line " + e.token.line + "]");
+        hadRuntimeError = true;
     }
 
     private static void report(int line, String where, String message) {
@@ -90,7 +110,7 @@ public class Lox {
                 break;
             }
             run(line);
+            hadError = false;
         }
     }
-
 }
