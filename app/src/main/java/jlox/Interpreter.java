@@ -35,6 +35,26 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   }
 
   @Override
+  public Void visitBlockStmt(Stmt.Block stmt) {
+    executeBlock(stmt.statements, new Environment(environment));
+    return null;
+  }
+
+  void executeBlock(List<Stmt> statements, Environment environment) {
+    // TODO instead of mutating by hand, should probably pass Env var to each visit method
+    Environment previous = this.environment;
+
+    try {
+      this.environment = environment;
+      for (Stmt statement : statements) {
+        execute(statement);
+      }
+    } finally {
+      this.environment = previous;
+    }
+  }
+
+  @Override
   public Void visitExpressionStmt(Stmt.Expression stmt) {
     evaluate(stmt.expression);
     return null;
@@ -103,6 +123,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
       case LESS_EQUAL:
         return leftNum <= rightNum;
     }
+
+    // TODO This should be unreachable. Log something? Throw?
     return null;
   }
 

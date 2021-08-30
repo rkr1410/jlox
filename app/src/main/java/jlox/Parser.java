@@ -13,7 +13,8 @@ import static jlox.TokenType.*;
     program     →   declaration* EOF ;
     declaration →   varDecl | statement ;
     varDecl     →   "var" IDENTIFIER ("=" expression)? ";" ;
-    statement   →   exprStmt | printStmt ;
+    statement   →   exprStmt | printStmt | block ;
+    block       →   "{" declaration* "}" ;
     exprStmt    →   expression ";" ;
     printStmt   →   "print" expression ";" ;
     expression  →   assignment ;
@@ -84,6 +85,7 @@ public class Parser {
     // statement → exprStmt | printStmt ;
     private Stmt statement() {
         if (advanceIf(PRINT)) return printStatement();
+        if (advanceIf(LEFT_BRACE)) return new Stmt.Block(block());
         return expressionStatement();
     }
 
@@ -97,6 +99,16 @@ public class Parser {
         var expr = expression();
         expect(SEMICOLON, "Expected ; after expression");
         return new Stmt.Expression(expr);
+    }
+
+    private List<Stmt> block() {
+        var statements = new ArrayList<Stmt>();
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        expect(RIGHT_BRACE, "Expected }");
+        return statements;
     }
 
     // expression → equality ;

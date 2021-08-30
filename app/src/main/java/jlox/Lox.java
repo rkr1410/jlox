@@ -23,7 +23,7 @@ public class Lox {
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
 
-    public static void main(String[] args) throws IOException {
+    public static void main1(String[] args) throws IOException {
         var argCount = args.length;
 
         if (argCount > 1) {
@@ -34,6 +34,10 @@ public class Lox {
         } else {
             runPrompt();
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+        runScript("C:\\stuff\\java\\jlox\\app\\src\\test.lox");
     }
 
     static void runScript(String fileName) throws IOException {

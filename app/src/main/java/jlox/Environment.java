@@ -6,6 +6,16 @@ import java.util.Map;
 class Environment {
   private final Map<String, Object> values = new HashMap<>();
 
+  private final Environment enclosing;
+
+  public Environment() {
+    this.enclosing = null;
+  }
+
+  public Environment(Environment enclosing) {
+    this.enclosing = enclosing;
+  }
+
   void define(String name, Object value) {
     values.put(name, value);
 //    var oldVar = values.putIfAbsent(name, value);
@@ -20,6 +30,9 @@ class Environment {
       return;
     }
 
+    if (enclosing != null) {
+      enclosing.assign(name, value);
+    }
     throw new RuntimeError(name, "Variable " + name.lexeme + " is undefined");
   }
 
@@ -27,6 +40,9 @@ class Environment {
     var value = values.get(name.lexeme);
     //TODO can we try and make it a syntax error? (see 8.3 Environments in 'crafting interpreters')
     if (value == null) {
+      if (enclosing != null) {
+        return enclosing.get(name);
+      }
       throw new RuntimeError(name, "Variable " + name.lexeme + " is undefined");
     }
     return value;

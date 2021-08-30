@@ -450,35 +450,35 @@ class ScannerTestSingleTokens {
                 .followedByEofOnTheSameLine();
     }
 
-//    @Test
-//    void randomTest() {
-//        var source =
-//                "class Test {\n" +
-//                        "    fun testFunction() {\n" +
-//                        "        var one = 1;\n" +
-//                        "        var zero = 0.0;\n" +
-//                        "\n" +
-//                        "        if (one == zero) {\n" +
-//                        "            print \"well...\";\n" +
-//                        "            return -1;\n" +
-//                        "        } else {\n" +
-//                        "            print \"ok\";\n" +
-//                        "            return 1;\n" +
-//                        "        }\n" +
-//                        "    }\n" +
-//                        "\n" +
-//                        "    fun loopTest() {\n" +
-//                        "        var counter = 0;\n" +
-//                        "        while (counter < 10) {\n" +
-//                        "            counter = counter + 1;\n" +
-//                        "        }\n" +
-//                        "    }\n" +
-//                        "}";
-//        List<Token> tokens = new Scanner(source).scanTokens();
-//        for (Token token : tokens) {
-//            System.err.println(token);
-//        }
-//    }
+    @Test
+    void randomTest() {
+        var source =
+                "class Test {\n" +
+                        "    fun testFunction() {\n" +
+                        "        var one = 1;\n" +
+                        "        var zero = 0.0;\n" +
+                        "\n" +
+                        "        if (one == zero) {\n" +
+                        "            print \"well...\";\n" +
+                        "            return -1;\n" +
+                        "        } else {\n" +
+                        "            print \"ok\";\n" +
+                        "            return 1;\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    fun loopTest() {\n" +
+                        "        var counter = 0;\n" +
+                        "        while (counter < 10) {\n" +
+                        "            counter = counter + 1;\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "}";
+        List<Token> tokens = new Scanner(source).scanTokens();
+        for (Token token : tokens) {
+            System.err.println(token);
+        }
+    }
 
     private static ScannerAsserter assertThatScannerGivenSource(String source) {
         return new ScannerAsserter(source);
