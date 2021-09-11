@@ -79,6 +79,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   }
 
   @Override
+  public Void visitIfStmtStmt(Stmt.IfStmt stmt) {
+    if (isTruthy(evaluate(stmt.condition))) {
+      execute(stmt.thenBranch);
+    } else if (stmt.elseBranch != null) {
+      execute(stmt.elseBranch);
+    }
+    return null;
+  }
+
+  @Override
   public Object visitAssignExpr(Expr.Assign expr) {
     var value = evaluate(expr.value);
     environment.assign(expr.name, value);
@@ -96,7 +106,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
       return left + (String)right;
     }
 
-    if (operator == EQUAL) {
+    if (operator == EQUAL_EQUAL) {
       return isEqual(left, right);
     } else if (operator == BANG_EQUAL) {
       return !isEqual(left, right);

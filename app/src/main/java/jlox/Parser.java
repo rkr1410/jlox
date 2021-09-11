@@ -13,7 +13,8 @@ import static jlox.TokenType.*;
     program     →   declaration* EOF ;
     declaration →   varDecl | statement ;
     varDecl     →   "var" IDENTIFIER ("=" expression)? ";" ;
-    statement   →   exprStmt | printStmt | block ;
+    statement   →   exprStmt | printStmt | block | ifStmt  ;
+    ifStmt      →   "if" "(" expression ")" statement ("else" statement)?  ;
     block       →   "{" declaration* "}" ;
     exprStmt    →   expression ";" ;
     printStmt   →   "print" expression ";" ;
@@ -26,18 +27,19 @@ import static jlox.TokenType.*;
     unary       →   ( "!" | "-" ) unary | primary ;
     primary     →   NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER;
 
-    Grammar notation        Code representation
-         Terminal           Code to match and consume a token
-        Nonterminal         Call to that rule’s function
-            |               if or switch statement
-          * or +            while or for loop
-            ?               if statement
+    Grammar notation    |   Code representation
+    ---------------------------------------------------------
+         Terminal       |   Code to match and consume a token
+        Nonterminal     |   Call to that rule’s function
+            |           |   if or switch statement
+          * or +        |   while or for loop
+            ?           |   if statement
  */
 public class Parser {
     private static class ParseError extends RuntimeException {}
     /*
         On parse error, look forward for these token types to synchronize the parser
-        and parse the rest of the source, so that the error is not the last thing reported.
+        and parse the rest of the source, so that the error is not last thing reported.
      */
     private final static Set<TokenType> expressionStarters = Set.of(CLASS, FUN, VAR, FOR, IF, WHILE, PRINT, RETURN);
 
@@ -51,7 +53,7 @@ public class Parser {
     List<Stmt> parse() {
         try {
             var stmts = new ArrayList<Stmt>();
-            while(!isAtEnd()) {
+            while (!isAtEnd()) {
                 stmts.add(declaration());
             }
             return stmts;
@@ -84,9 +86,24 @@ public class Parser {
 
     // statement → exprStmt | printStmt ;
     private Stmt statement() {
+        if (advanceIf(IF)) return ifStatement();
         if (advanceIf(PRINT)) return printStatement();
         if (advanceIf(LEFT_BRACE)) return new Stmt.Block(block());
         return expressionStatement();
+    }
+
+    private Stmt ifStatement() {
+        expect(LEFT_PAREN, "Expected ( after if");
+        Expr ifCondition = expression();
+        expect(RIGHT_PAREN, "Expected ) after condition");
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+
+        if (advanceIf(ELSE)) {
+            elseBranch = statement();
+        }
+
+        return new Stmt.IfStmt(ifCondition, thenBranch, elseBranch);
     }
 
     private Stmt printStatement() {

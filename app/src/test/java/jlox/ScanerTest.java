@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Objects;
 
-class ScannerTestSingleTokens {
+class ScanerTest {
     @Test
     @DisplayName("Token test LEFT_PAREN")
     void testTokenLeftParen() {

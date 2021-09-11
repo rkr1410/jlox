@@ -6,6 +6,7 @@ package jlox;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,6 +23,7 @@ public class Lox {
     private static final Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
+    static PrintStream err = System.err;
 
     public static void main1(String[] args) throws IOException {
         var argCount = args.length;
@@ -37,7 +39,8 @@ public class Lox {
     }
 
     public static void main(String[] args) throws IOException {
-        runScript("C:\\stuff\\java\\jlox\\app\\src\\test.lox");
+        //runScript("C:\\stuff\\java\\jlox\\app\\src\\test.lox");
+        runScript("/Users/pafau/IdeaProjects/jlox/app/src/test.lox");
     }
 
     static void runScript(String fileName) throws IOException {
@@ -92,13 +95,17 @@ public class Lox {
     }
 
     static void runtimeError(RuntimeError e) {
-        System.err.println(e.getMessage() + "\n[line " + e.token.line + "]");
+        err.println(e.getMessage() + "\n[line " + e.token.line + "]");
         hadRuntimeError = true;
     }
 
     private static void report(int line, String where, String message) {
-        System.err.printf("[line %s] Error%s: %s\n", line, where, message);
+        err.printf("[line %s] Error%s: %s\n", line, where, message);
         hadError = true;
+    }
+
+    static void setErr(PrintStream err) {
+        Lox.err = err;
     }
 
     static void runPrompt() throws IOException {

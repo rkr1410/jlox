@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class AstGen {
     private static String indent = "    ";
@@ -17,8 +15,8 @@ public class AstGen {
 //            System.exit(Sysexits.EX_USAGE);
 //        }
 //        String outputDir = args[0];
-        //String outputDir = "/Users/pafau/IdeaProjects/jlox/app/src/main/java/jlox";
-        String outputDir = "C:\\stuff\\java\\jlox\\app\\src\\main\\java\\jlox";
+        String outputDir = "/Users/pafau/IdeaProjects/jlox/app/src/main/java/jlox";
+        //String outputDir = "C:\\stuff\\java\\jlox\\app\\src\\main\\java\\jlox";
 
         defineAst(outputDir, "Expr", Arrays.asList(
                 "Assign   : Token name, Expr value",
@@ -33,7 +31,8 @@ public class AstGen {
             "Block      : List<Stmt> statements",
             "Expression : Expr expression",
             "Print      : Expr expression",
-            "Var        : Token name, Expr initializer"
+            "Var        : Token name, Expr initializer",
+            "IfStmt     : Expr condition, Stmt thenBranch, Stmt elseBranch"
         ));
     }
 

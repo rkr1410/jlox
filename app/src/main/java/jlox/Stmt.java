@@ -8,6 +8,7 @@ abstract class Stmt {
         R visitExpressionStmt(Expression stmt);
         R visitPrintStmt(Print stmt);
         R visitVarStmt(Var stmt);
+        R visitIfStmtStmt(IfStmt stmt);
     }
 
     abstract <R> R accept(Visitor<R> visitor);
@@ -64,6 +65,23 @@ abstract class Stmt {
 
         Token name;
         Expr initializer;
+    }
+
+    static class IfStmt extends Stmt {
+        IfStmt(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+            this.condition = condition;
+            this.thenBranch = thenBranch;
+            this.elseBranch = elseBranch;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitIfStmtStmt(this);
+        }
+
+        Expr condition;
+        Stmt thenBranch;
+        Stmt elseBranch;
     }
 
 }
